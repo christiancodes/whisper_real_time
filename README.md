@@ -31,4 +31,16 @@ scoop install ffmpeg
 
 For more information on Whisper please see https://github.com/openai/whisper
 
+On MacOS:
+
+```
+brew update
+brew install portaudio
+brew link --overwrite portaudio
+
+pip install setuptools-rust
+```
+
+Run with `python transcribe_demo.py`.
+
 The code in this repository is public domain.
