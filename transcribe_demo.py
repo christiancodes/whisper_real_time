@@ -15,6 +15,8 @@ from sys import platform
 
 
 def main():
+    print(" # Whisp! # ")
+    print("Please wait a moment while the model loads...")
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="medium", help="Model to use",
                         choices=["tiny", "base", "small", "medium", "large"])
@@ -91,7 +93,7 @@ def main():
     recorder.listen_in_background(source, record_callback, phrase_time_limit=record_timeout)
 
     # Cue the user that we're ready to go.
-    print("Model loaded.\n")
+    print("\n** Model loaded. Begin dictation any time. **")
 
     while True:
         try:
@@ -135,6 +137,7 @@ def main():
                 os.system('cls' if os.name=='nt' else 'clear')
                 for line in transcription:
                     print(line)
+
                 # Flush stdout.
                 print('', end='', flush=True)
 
@@ -143,10 +146,16 @@ def main():
         except KeyboardInterrupt:
             break
 
-    print("\n\nTranscription:")
-    for line in transcription:
-        print(line)
+    print("\n\nTranscription completed.")
 
+    # Persist to transcription log file directory
+    timestamp_filename = datetime.now().strftime("%Y%m%d-%H%M%S")
+    filepath = os.path.expanduser('~/Desktop/Dictation/') + timestamp_filename + '.txt'
+    with open(filepath, 'x') as persisted:
+        for line in transcription:
+            persisted.write(line + "\n")
+        persisted.close()
+    print("\nFile written:\n" + filepath + "\n")
 
 if __name__ == "__main__":
     main()
