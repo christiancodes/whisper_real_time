@@ -126,12 +126,15 @@ def main():
                 result = audio_model.transcribe(temp_file, fp16=torch.cuda.is_available())
                 text = result['text'].strip()
 
-                # If we detected a pause between recordings, add a new item to our transcripion.
-                # Otherwise edit the existing one.
-                if phrase_complete:
-                    transcription.append(text)
-                else:
-                    transcription[-1] = text
+                # Pull out model anomalies
+                filler_phrases = ['Bye.', 'Thank you.', 'Thanks for watching!', "I'll see you next time."]
+                if not text in filler_phrases:
+                    # If we detected a pause between recordings, add a new item to our transcripion.
+                    # Otherwise edit the existing one.
+                    if phrase_complete:
+                        transcription.append(text)
+                    else:
+                        transcription[-1] = text
 
                 # Clear the console to reprint the updated transcription.
                 os.system('cls' if os.name=='nt' else 'clear')
